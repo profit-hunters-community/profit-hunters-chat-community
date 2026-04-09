@@ -1,4 +1,4 @@
-// bubble-renderer-fixed-v2.js — FINAL CLEAN + JOIN STICKERS + REACTION PILLS + AUTO SCROLL + MERGED JOINERS
+// bubble-renderer-fixed-v2.js — PERFORMANCE OPTIMIZED (no lazy loading, avatars load immediately)
 (function () {
 'use strict';
 
@@ -86,6 +86,7 @@ function init() {
     avatar.alt = persona?.name || 'User';
     avatar.src = persona?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(persona?.name || 'U')}`;
     avatar.onerror = () => avatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(persona?.name || 'U')}`;
+    // ❌ Lazy loading removed – avatars load immediately
 
     const content = document.createElement('div');
     content.className = 'tg-bubble-content';
@@ -137,7 +138,7 @@ function init() {
       if (caption) PINNED_MESSAGE_ID = id;
     }
 
-    // Reactions (FIXED — attached to wrapper so it floats outside bubble)
+    // Reactions (attached to wrapper so it floats outside bubble)
     if (reactions.length) {
       const pill = document.createElement('div');
       pill.className = 'tg-bubble-reactions';
@@ -234,10 +235,16 @@ function init() {
   function hideJump() { unseenCount = 0; updateJump(); jumpIndicator?.classList.add('hidden'); }
 
   jumpIndicator?.addEventListener('click', () => { container.scrollTop = container.scrollHeight; hideJump(); });
+  
+  /* =====================================================
+     PERFORMANCE: passive scroll + requestAnimationFrame
+  ===================================================== */
   container.addEventListener('scroll', () => {
-    const distance = container.scrollHeight - container.scrollTop - container.clientHeight;
-    if (distance < 80) hideJump();
-  });
+    requestAnimationFrame(() => {
+      const distance = container.scrollHeight - container.scrollTop - container.clientHeight;
+      if (distance < 80) hideJump();
+    });
+  }, { passive: true });
 
   /* =====================================================
      TYPING DURATION
@@ -258,7 +265,7 @@ function init() {
     calculateTypingDuration
   };
 
-  console.log('✅ bubble-renderer FINAL V2 — JOIN STICKERS + REACTIONS + MERGE FIX integrated.');
+  console.log('✅ bubble-renderer OPTIMIZED — no lazy loading, passive scroll, RAF.');
 }
 
 document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
