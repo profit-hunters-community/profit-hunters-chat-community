@@ -56,11 +56,12 @@
       </button>
     </header>
 
-    <!-- PIN BANNER -->
-    <div id="tg-pin-banner" class="tg-pin-banner hidden" role="region" aria-live="polite"></div>
-
-    <!-- CHAT CONTAINER -->
-    <main id="tg-comments-container" class="tg-comments-container" role="feed" aria-live="off"></main>
+    <!-- CHAT CONTAINER with PIN BANNER inside (moved here) -->
+    <main id="tg-comments-container" class="tg-comments-container" role="feed" aria-live="off">
+      <!-- PIN BANNER - Telegram pill style, will be populated by JS with broadcast image + "📌 Group Rules" + blue Contact Admin button -->
+      <div id="tg-pin-banner" class="tg-pin-banner" role="region" aria-live="polite"></div>
+      <!-- Messages will be appended here by JavaScript -->
+    </main>
 
     <!-- NEW MESSAGE JUMP INDICATOR -->
     <div id="tg-jump-indicator" class="hidden" aria-hidden="true">
@@ -88,7 +89,7 @@
   <script src="interactions-v14.1-crowd-join-replies-typing-auto-hide.js"></script>
   <script src="app-fixed.js"></script>
 
-  <!-- Initialization + Safety Checks -->
+  <!-- Initialization + Safety Checks (pin banner compress is inside app-fixed.js now) -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // Initialize icons
